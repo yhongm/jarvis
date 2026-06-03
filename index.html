@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jarvis — 单文件本地智能体 · Windows / macOS 下载</title>
+  <meta name="description" content="Jarvis：Rust 单可执行文件智能体。分层记忆、Web 聊天图片多模态、Skills 跨平台引导、Skill、Shell、定时任务、无头爬虫、飞书机器人。无需 Node.js。">
+  <link rel="icon" href="assets/jarvis-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon.ico" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/jarvis-icon-256.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #061414;
+      --ink-soft: #1a2e2e;
+      --teal: #007a7a;
+      --teal-bright: #00c4c4;
+      --mint: #7dfff9;
+      --glow: rgba(0, 196, 196, 0.35);
+      --surface: #eef9f8;
+      --muted: #4d6665;
+      --card: rgba(255, 255, 255, 0.82);
+      --border: rgba(0, 90, 90, 0.1);
+      --radius: 18px;
+      --radius-lg: 28px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Outfit", "Noto Sans SC", system-ui, sans-serif;
+      color: var(--ink-soft);
+      background: var(--surface);
+      line-height: 1.55;
+    }
+    .ambient {
+      position: fixed; inset: 0; z-index: -1; overflow: hidden;
+      background: linear-gradient(165deg, #dff5f3 0%, #f4fbfb 45%, #e2f2f1 100%);
+    }
+    .orb {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.55;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .orb-a { width: 420px; height: 420px; background: var(--mint); top: -120px; left: -80px; }
+    .orb-b { width: 360px; height: 360px; background: #00a8a8; top: 20%; right: -100px; animation-delay: -6s; }
+    .orb-c { width: 300px; height: 300px; background: #b8f0ee; bottom: -80px; left: 30%; animation-delay: -12s; }
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(24px, 32px) scale(1.08); }
+    }
+    .wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px 80px; }
+
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 0; gap: 16px; flex-wrap: wrap;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 14px;
+      text-decoration: none; color: inherit;
+    }
+    .logo img {
+      width: 52px; height: 52px; border-radius: 16px;
+      box-shadow: 0 12px 32px var(--glow);
+    }
+    .logo-text strong {
+      display: block; font-family: "Fraunces", Georgia, serif;
+      font-size: 1.5rem; font-weight: 600; color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+    .logo-text span { font-size: 0.8rem; color: var(--muted); }
+    nav { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 22px; border-radius: 999px; font-weight: 600; font-size: 0.92rem;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, #005f5f, var(--teal-bright));
+      box-shadow: 0 14px 36px var(--glow);
+    }
+    .btn-ghost {
+      background: var(--card); color: var(--teal);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      display: grid; grid-template-columns: 1.15fr 0.85fr;
+      gap: 48px; align-items: center;
+      padding: 40px 0 56px;
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .hero-visual { order: -1; }
+      .cta, .pills { justify-content: center; }
+      .hero-copy { margin-left: auto; margin-right: auto; }
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 999px;
+      background: rgba(0, 122, 122, 0.12);
+      color: var(--teal); font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .eyebrow::before {
+      content: ""; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--teal-bright); box-shadow: 0 0 12px var(--teal-bright);
+    }
+    h1 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(2.4rem, 5vw, 3.5rem);
+      line-height: 1.08; font-weight: 600;
+      color: var(--ink); letter-spacing: -0.03em;
+    }
+    h1 .accent {
+      background: linear-gradient(120deg, var(--teal), var(--teal-bright));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .hero-copy {
+      margin-top: 18px; font-size: 1.08rem; color: var(--muted);
+      max-width: 34rem; line-height: 1.65;
+    }
+    .pills {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px;
+    }
+    .pill {
+      padding: 8px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+      background: #fff; border: 1px solid var(--border);
+      color: var(--ink-soft); box-shadow: 0 4px 16px rgba(0, 50, 50, 0.06);
+    }
+    .pill strong { color: var(--teal); }
+    .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+    .hero-card {
+      position: relative; padding: 32px;
+      background: linear-gradient(145deg, #004d4d, #008f8f);
+      border-radius: var(--radius-lg);
+      color: #e8fffe; box-shadow: 0 32px 64px rgba(0, 60, 60, 0.28);
+      overflow: hidden;
+    }
+    .hero-card::after {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(125, 255, 249, 0.25), transparent 50%);
+      pointer-events: none;
+    }
+    .hero-card img {
+      position: relative; z-index: 1;
+      width: 120px; height: 120px; display: block; margin: 0 auto 20px;
+      filter: drop-shadow(0 16px 24px rgba(0,0,0,0.25));
+    }
+    .hero-card ul {
+      position: relative; z-index: 1;
+      list-style: none; font-size: 0.92rem; opacity: 0.95;
+    }
+    .hero-card li {
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.12);
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .hero-card li:last-child { border-bottom: none; }
+    .hero-card li::before {
+      content: "✓"; font-weight: 700; color: var(--mint); flex-shrink: 0;
+    }
+
+    .section-head {
+      text-align: center; max-width: 640px;
+      margin: 0 auto 36px;
+    }
+    .section-head h2 {
+      font-family: "Fraunces", serif; font-size: clamp(1.6rem, 3vw, 2.1rem);
+      color: var(--ink); margin-bottom: 10px;
+    }
+    .section-head p { color: var(--muted); font-size: 1rem; }
+
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px; margin-bottom: 56px;
+    }
+    .feat {
+      background: var(--card); backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.95);
+      border-radius: var(--radius); padding: 22px 24px;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .feat:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 48px rgba(0, 70, 70, 0.1);
+    }
+    .feat-icon {
+      width: 44px; height: 44px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px; color: var(--teal);
+      background: linear-gradient(135deg, rgba(0,122,122,0.12), rgba(0,196,196,0.2));
+    }
+    .feat-icon svg { width: 24px; height: 24px; display: block; }
+    .feat h3 { font-size: 1.05rem; color: var(--ink); margin-bottom: 8px; }
+    .feat p { font-size: 0.88rem; color: var(--muted); line-height: 1.55; }
+    .feat-tag {
+      display: inline-block; margin-top: 12px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--teal);
+    }
+    .span-4 { grid-column: span 4; }
+    .span-6 { grid-column: span 6; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+    .feat-highlight {
+      background: linear-gradient(135deg, rgba(0,95,95,0.08), rgba(125,255,249,0.15));
+      border-color: rgba(0, 196, 196, 0.25);
+    }
+    @media (max-width: 900px) {
+      .span-4, .span-6, .span-8, .span-12 { grid-column: span 12; }
+    }
+
+    .compare {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      margin-bottom: 56px;
+    }
+    @media (max-width: 700px) { .compare { grid-template-columns: 1fr; } }
+    .compare-box {
+      padding: 24px; border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .compare-box.yes {
+      background: #fff;
+      box-shadow: 0 16px 40px rgba(0, 80, 80, 0.08);
+    }
+    .compare-box.no {
+      background: rgba(255,255,255,0.45);
+      opacity: 0.85;
+    }
+    .compare-box h3 { font-size: 1rem; margin-bottom: 12px; }
+    .compare-box ul { list-style: none; font-size: 0.9rem; color: var(--muted); }
+    .compare-box li { padding: 6px 0; padding-left: 22px; position: relative; }
+    .compare-box.yes li::before { content: "✓"; position: absolute; left: 0; color: var(--teal); font-weight: 700; }
+    .compare-box.no li::before { content: "×"; position: absolute; left: 0; color: #b05050; font-weight: 700; }
+
+    .panel {
+      background: var(--card); border-radius: var(--radius-lg);
+      padding: 32px; border: 1px solid rgba(255,255,255,0.9);
+      box-shadow: 0 24px 56px rgba(0, 50, 50, 0.08);
+      margin-bottom: 28px;
+    }
+    .panel h2 {
+      font-family: "Fraunces", serif; font-size: 1.55rem;
+      color: var(--ink); margin-bottom: 8px;
+    }
+    .panel > .sub { color: var(--muted); margin-bottom: 22px; font-size: 0.95rem; }
+    .dl-row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+      padding: 18px 20px; background: #fff;
+      border-radius: 14px; border: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+    .dl-row strong { display: block; color: var(--ink); }
+    .dl-row small { color: var(--muted); }
+    .sha {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 0.68rem; color: var(--muted);
+      word-break: break-all; margin-top: 6px;
+    }
+    .release-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+      padding: 14px 18px; margin-bottom: 18px;
+      background: linear-gradient(135deg, rgba(0,95,95,0.08), rgba(125,255,249,0.15));
+      border-radius: 14px; border: 1px solid var(--border);
+    }
+    .release-bar p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .release-bar strong { color: var(--ink); }
+    .dl-platform { margin-bottom: 22px; }
+    .dl-platform h3 {
+      font-size: 1rem; color: var(--ink); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .dl-platform h3 span {
+      font-size: 0.75rem; font-weight: 600; color: var(--teal);
+      background: rgba(0,122,122,0.1); padding: 3px 10px; border-radius: 999px;
+    }
+    .install-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    }
+    @media (max-width: 760px) { .install-grid { grid-template-columns: 1fr; } }
+    .install-block h3 {
+      font-size: 1rem; color: var(--ink); margin-bottom: 12px;
+    }
+    .steps { counter-reset: s; list-style: none; }
+    .steps li {
+      counter-increment: s; position: relative;
+      padding-left: 40px; margin-bottom: 16px; color: var(--muted);
+    }
+    .steps li::before {
+      content: counter(s);
+      position: absolute; left: 0; top: 2px;
+      width: 28px; height: 28px; border-radius: 10px;
+      background: var(--teal); color: #fff;
+      font-size: 0.85rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    footer {
+      text-align: center; padding-top: 40px;
+      color: var(--muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+    code {
+      font-size: 0.86em; font-family: ui-monospace, Consolas, monospace;
+      background: rgba(0, 100, 100, 0.08); padding: 2px 7px; border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+  </div>
+
+  <div class="wrap">
+    <header>
+      <a class="logo" href="./">
+        <img src="assets/jarvis-icon.svg" width="52" height="52" alt="">
+        <div class="logo-text">
+          <strong>Jarvis</strong>
+          <span>jarvis-agent · 本地智能体</span>
+        </div>
+      </a>
+      <nav>
+        <a class="btn btn-ghost" href="#features">能力一览</a>
+        <a class="btn btn-ghost" id="nav-repo" href="#" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-primary" href="#download">下载</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Single Binary Agent</div>
+        <h1>轻便、完整、<span class="accent">单文件</span>的桌面智能体</h1>
+        <p class="hero-copy">
+          Jarvis 用 Rust 写成<strong>一个可执行文件</strong>，内嵌 Web 控制台与工具链。
+          自带分层记忆、Web 聊天图片多模态、Skills 跨平台目录引导与完整 Skill 扩展——
+          <strong>无需安装 Node.js、Python 或 Docker</strong> 才能运行本体（仅爬虫可选本机 Chrome）。
+        </p>
+        <div class="pills">
+          <span class="pill"><strong>单文件</strong> 分发</span>
+          <span class="pill">聊天图片多模态</span>
+          <span class="pill">Skills 跨平台</span>
+          <span class="pill">零 Node 依赖</span>
+          <span class="pill">Windows · Mac</span>
+        </div>
+        <div class="cta">
+          <a class="btn btn-primary" href="#download">下载 Windows / macOS</a>
+          <a class="btn btn-ghost" id="hero-release" href="#" target="_blank" rel="noopener">GitHub Releases</a>
+          <a class="btn btn-ghost" href="intro.html">产品介绍</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <img src="assets/jarvis-icon.svg" alt="">
+          <ul>
+            <li>单文件可执行：网关 + Agent 循环 + Web UI</li>
+            <li>Web 聊天框上传图片，多模态交给视觉模型</li>
+            <li>Skills 向导：Claude / Cursor / 内置目录</li>
+            <li>MEMORY / USER / ERRORS 长期记忆</li>
+            <li>飞书机器人与局域网 Web 同一套逻辑</li>
+            <li>MCP · OpenAI 兼容 API · 本地 llama</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-head" id="features">
+      <h2>为「真正能干活的助手」而设计</h2>
+      <p>不是聊天壳，而是带记忆、人格、工具与通道的完整 Agent 运行时。</p>
+    </div>
+
+    <div class="bento">
+      <article class="feat feat-highlight span-6">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#vision"></use></svg></div>
+        <h3>Web 聊天图片多模态</h3>
+        <p>控制台输入框左下角可上传图片（最多 4 张、单张 ≤ 4MB），预览后随消息发送；以 Multimodal 格式交给大模型，视觉能力由所选模型 API 决定。</p>
+        <span class="feat-tag">Vision · WebSocket</span>
+      </article>
+      <article class="feat feat-highlight span-6">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#skills-dir"></use></svg></div>
+        <h3>Skills 跨平台目录引导</h3>
+        <p>自动跳过从其他系统同步来的无效路径（如 Mac 上的 <code>C:\...</code>）；弹窗可扫描本机 Claude / Cursor / Hermes 目录，或一键使用 config 同级 <code>skills/</code> 并热重载。</p>
+        <span class="feat-tag">/api/skills/status</span>
+      </article>
+
+      <article class="feat feat-highlight span-8">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#memory"></use></svg></div>
+        <h3>分层记忆系统</h3>
+        <p>会话历史与长期记忆协同：USER.md 记录你的偏好与画像，MEMORY.md 沉淀跨会话知识。Agent 启动时自动注入记忆层，越用越懂你。</p>
+        <span class="feat-tag">L2 Long-term Memory</span>
+      </article>
+      <article class="feat span-4">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#error"></use></svg></div>
+        <h3>错误自动总结</h3>
+        <p>工具失败与异常写入 ERRORS.md，跨会话注入提示词，避免重复踩坑。</p>
+        <span class="feat-tag">Error Memory</span>
+      </article>
+      <article class="feat span-4">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#profile"></use></svg></div>
+        <h3>人格与用户画像</h3>
+        <p>根据 USER.md 引导补齐年龄、职业等画像；对话风格与边界可随人格配置演进。</p>
+        <span class="feat-tag">Profile · Onboarding</span>
+      </article>
+      <article class="feat span-4">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#skill"></use></svg></div>
+        <h3>Skill 完整支持</h3>
+        <p><code>skills/</code> 或本机 Agent 目录加载 SKILL.md，支持脚本工具与热重载；控制台 Skills 向导配置路径。</p>
+        <span class="feat-tag">Skill Scripts</span>
+      </article>
+      <article class="feat span-4">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#mcp"></use></svg></div>
+        <h3>MCP 协议</h3>
+        <p>对接 Cursor、Claude 等 MCP 客户端；网关统一管理工具与会话。</p>
+        <span class="feat-tag">Model Context Protocol</span>
+      </article>
+
+      <article class="feat span-6">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#fs"></use></svg></div>
+        <h3>文件系统工具</h3>
+        <p>读写、搜索、Diff 预览；可配置允许目录，安全可控地操作本机项目。</p>
+      </article>
+      <article class="feat span-6">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#shell"></use></svg></div>
+        <h3>系统 Shell</h3>
+        <p>执行 PowerShell / 命令行任务，串联编译、脚本与运维操作。</p>
+      </article>
+      <article class="feat span-6">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#cron"></use></svg></div>
+        <h3>定时任务</h3>
+        <p>内置调度器，按计划触发 Agent 或脚本，适合巡检、日报与自动化流程。</p>
+      </article>
+      <article class="feat span-6">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#crawl"></use></svg></div>
+        <h3>无头爬虫</h3>
+        <p>Chromium CDP 渲染动态页，搜索 + 抓取可落地文件；静态页亦可快速回退。</p>
+      </article>
+      <article class="feat span-6">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#feishu"></use></svg></div>
+        <h3>飞书机器人</h3>
+        <p>飞书长连接接入，与 Web 控制台共享同一套消息分发与工具能力。</p>
+      </article>
+      <article class="feat span-6">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#web"></use></svg></div>
+        <h3>Web 控制台</h3>
+        <p>Material 风格聊天（含图片上传）、Skills / 通道配置向导、定时任务与 MCP 管理；WebSocket 流式输出，局域网可访问。</p>
+      </article>
+    </div>
+
+    <div class="compare">
+      <div class="compare-box yes">
+        <h3>Jarvis 开箱即用</h3>
+        <ul>
+          <li>单个 jarvis.exe，内嵌 Web UI 静态资源</li>
+          <li>无需 Node / npm / pnpm 环境</li>
+          <li>记忆、人格、错误库本地 Markdown</li>
+          <li>Web 图片多模态 + Skills 跨平台引导</li>
+          <li>Windows / macOS 均从 GitHub Releases 下载</li>
+        </ul>
+      </div>
+      <div class="compare-box no">
+        <h3>常见 Node 类 Agent 栈</h3>
+        <ul>
+          <li>需安装运行时与大量 node_modules</li>
+          <li>多进程：网关、前端、插件服务</li>
+          <li>部署复杂，内网分发成本高</li>
+          <li>版本碎片与依赖冲突</li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="panel" id="download">
+      <h2>下载 Jarvis</h2>
+      <p class="sub">安装包托管在 <strong>GitHub Releases</strong>。只需编辑同目录 <code>config.json</code> 中的 <code>download_links[].url</code>，无需上传源码或二进制到本站点。</p>
+      <div class="release-bar" id="release-bar" hidden>
+        <p>全部版本与 Release Notes：<strong id="release-label">GitHub Releases</strong></p>
+        <a class="btn btn-ghost" id="release-link" href="#" target="_blank" rel="noopener">打开 Release 页面</a>
+      </div>
+      <p class="sub" id="dl-hint">正在加载版本信息…</p>
+      <div id="dl-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2>安装与启动</h2>
+      <p class="sub">Windows 安装向导含功能摘要；完整图文见 <a href="intro.html" style="color:var(--teal)">intro.html</a>。</p>
+      <div class="install-grid">
+        <div class="install-block">
+          <h3>Windows</h3>
+          <ol class="steps">
+            <li>从上方下载 <strong>Setup x64</strong> 安装包并运行向导。</li>
+            <li>在 Web UI <strong>配置</strong> 中填写 API Key，或编辑 <code>%LOCALAPPDATA%\Jarvis\config.toml</code>。</li>
+            <li>运行开始菜单「Jarvis 网关」或 <code>JarvisAgent.exe --gateway</code>。</li>
+            <li>浏览器打开 <code>http://127.0.0.1:8080/webui/</code>；在 <strong>Skills</strong> 标签配置目录，聊天框可上传图片。</li>
+          </ol>
+        </div>
+        <div class="install-block">
+          <h3>macOS</h3>
+          <ol class="steps">
+            <li>从上方或 GitHub Releases 下载对应架构的 <strong>Setup .pkg</strong>（Apple Silicon 或 Intel）。</li>
+            <li>双击安装后，在「应用程序」中打开 <strong>Jarvis</strong>（自动启动 gateway）。</li>
+            <li>浏览器打开 <code>http://127.0.0.1:8080/webui/</code>，在 <strong>配置</strong> 中填写 API Key。</li>
+            <li>若 config 含 Windows 路径，Skills 向导会自动跳过并引导选择本机目录。</li>
+          </ol>
+        </div>
+      </div>
+      <p style="margin-top:20px;color:var(--muted);font-size:0.9rem" id="gateway-hint"></p>
+    </section>
+
+    <footer>
+      <p>© author:yhongm</p>
+    </footer>
+  </div>
+
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display:none">
+    <symbol id="memory" viewBox="0 0 24 24">
+      <path d="M6 8h12v8H6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M9 8V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M9 16v2a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M9 12h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="error" viewBox="0 0 24 24">
+      <path d="M8 4h8l4 4v12H4V4h4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M12 9v5M12 17h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="profile" viewBox="0 0 24 24">
+      <circle cx="12" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M5 20c1.2-3.5 4-5.5 7-5.5s5.8 2 7 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M16 6l2-1.5M18 10l2 .5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="skill" viewBox="0 0 24 24">
+      <path d="M12 3l2.2 4.5 4.9.7-3.5 3.4.8 4.9L12 14.8 7.6 16.5l.8-4.9L5 8.2l4.9-.7L12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="mcp" viewBox="0 0 24 24">
+      <circle cx="6" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <circle cx="18" cy="6" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <circle cx="18" cy="18" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M8.2 11.2l7.6-3.4M8.2 12.8l7.6 3.4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    </symbol>
+    <symbol id="fs" viewBox="0 0 24 24">
+      <path d="M4 7a2 2 0 0 1 2-2h5l2 2h7v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M8 13h8M8 16h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="shell" viewBox="0 0 24 24">
+      <path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M7 10l2.5 2L7 14M11 14h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="cron" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M12 8v4l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="crawl" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    </symbol>
+    <symbol id="feishu" viewBox="0 0 24 24">
+      <path d="M6 18l3-10 3 6 3-6 3 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5 18h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="web" viewBox="0 0 24 24">
+      <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M3 9h18M8 15h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="vision" viewBox="0 0 24 24">
+      <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <circle cx="9" cy="11" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M3 11c2-3 5-4.5 9-4.5s7 1.5 9 4.5c-2 3-5 4.5-9 4.5S5 14 3 11z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    </symbol>
+    <symbol id="skills-dir" viewBox="0 0 24 24">
+      <path d="M4 7a2 2 0 0 1 2-2h5l2 2h9v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M8 13h8M8 16h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+  </svg>
+
+  <script>
+    function linkFilename(a) {
+      if (a.file) return a.file;
+      if (!a.url) return '';
+      try {
+        var seg = new URL(a.url).pathname.split('/').filter(Boolean);
+        return seg.length ? decodeURIComponent(seg[seg.length - 1]) : a.url;
+      } catch (e) {
+        var parts = a.url.split('/');
+        return decodeURIComponent(parts[parts.length - 1].split('?')[0] || a.url);
+      }
+    }
+    function guessPlatform(a) {
+      if (a.platform) return a.platform;
+      var f = linkFilename(a).toLowerCase();
+      var u = (a.url || '').toLowerCase();
+      if (f.indexOf('macos') >= 0 || f.indexOf('darwin') >= 0 || u.indexOf('macos') >= 0) return 'macos';
+      if (f.indexOf('.exe') >= 0 || f.indexOf('windows') >= 0) return 'windows';
+      return 'other';
+    }
+    function platformLabel(p) {
+      if (p === 'windows') return { title: 'Windows', tag: 'x64' };
+      if (p === 'macos') return { title: 'macOS', tag: 'Apple Silicon / Intel' };
+      return { title: '其他', tag: '' };
+    }
+    function appendArtifactRow(container, a) {
+      var row = document.createElement('div');
+      row.className = 'dl-row';
+      var name = linkFilename(a);
+      var meta = document.createElement('div');
+      meta.innerHTML =
+        '<strong>' + (a.label_zh || a.label_en || name || '下载') + '</strong>' +
+        (name ? '<small>' + name + '</small>' : '');
+      row.appendChild(meta);
+      var link = document.createElement('a');
+      link.className = 'btn btn-primary';
+      link.href = a.url;
+      link.textContent = '下载';
+      link.target = '_blank';
+      link.rel = 'noopener';
+      row.appendChild(link);
+      container.appendChild(row);
+    }
+    function renderDownloads(cfg) {
+      var list = document.getElementById('dl-list');
+      var hint = document.getElementById('dl-hint');
+      list.innerHTML = '';
+      var links = (cfg.download_links || []).filter(function (a) { return a.url; });
+      if (!links.length) {
+        hint.textContent = '暂无下载链接。请编辑 config.json，在 download_links 中填写 GitHub Release 附件直链。';
+        return;
+      }
+      hint.textContent = (cfg.product || 'Jarvis') +
+        (cfg.version ? ' v' + cfg.version : '') +
+        ' · 下载托管于 GitHub Releases';
+      var groups = { windows: [], macos: [], other: [] };
+      links.forEach(function (a) {
+        var p = guessPlatform(a);
+        if (!groups[p]) groups[p] = [];
+        groups[p].push(a);
+      });
+      ['windows', 'macos', 'other'].forEach(function (p) {
+        if (!groups[p] || !groups[p].length) return;
+        var block = document.createElement('div');
+        block.className = 'dl-platform';
+        var lbl = platformLabel(p);
+        var h = document.createElement('h3');
+        h.textContent = lbl.title + ' ';
+        if (lbl.tag) {
+          var tag = document.createElement('span');
+          tag.textContent = lbl.tag;
+          h.appendChild(tag);
+        }
+        block.appendChild(h);
+        groups[p].forEach(function (a) { appendArtifactRow(block, a); });
+        list.appendChild(block);
+      });
+    }
+    function applyConfig(cfg) {
+      if (cfg.docs_intro) {
+        var intro = document.getElementById('nav-intro');
+        if (intro) intro.href = cfg.docs_intro;
+      }
+      var repo = cfg.repository || cfg.github_repository || '';
+      if (repo) {
+        var navRepo = document.getElementById('nav-repo');
+        if (navRepo) navRepo.href = repo;
+      }
+      var releaseUrl = cfg.github_release || '';
+      if (releaseUrl) {
+        var bar = document.getElementById('release-bar');
+        var releaseLink = document.getElementById('release-link');
+        var heroRelease = document.getElementById('hero-release');
+        if (bar) bar.hidden = false;
+        if (releaseLink) releaseLink.href = releaseUrl;
+        if (heroRelease) heroRelease.href = releaseUrl;
+      }
+      var hints = [];
+      if (cfg.gateway_hint_windows) hints.push(cfg.gateway_hint_windows);
+      if (cfg.gateway_hint_macos) hints.push(cfg.gateway_hint_macos);
+      if (!hints.length && cfg.gateway_hint) hints.push(cfg.gateway_hint);
+      if (hints.length) document.getElementById('gateway-hint').textContent = hints.join(' ');
+    }
+    fetch('config.json')
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .catch(function () { return {}; })
+      .then(function (cfg) {
+        applyConfig(cfg || {});
+        renderDownloads(cfg || {});
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+﻿{
+    "product":  "Jarvis",
+    "version":  "0.0.1",
+    "built_at":  "2026-06-03 17:25:21",
+    "artifacts":  [
+                      {
+                          "id":  "installer-windows",
+                          "kind":  "installer",
+                          "platform":  "windows",
+                          "label_zh":  "Windows 瀹夎鍖?(x64)",
+                          "label_en":  "Windows Installer (x64)",
+                          "file":  "Jarvis-Setup-0.0.1-x64.exe",
+                          "size_bytes":  7234807,
+                          "sha256":  "02d29e4217a199903766321422d0806eb36b5803021a767fa6ca6c627c8e540f"
+                      }
+                  ]
+}
