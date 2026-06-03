@@ -34,12 +34,11 @@ Pre-built **installers only** (no source code in this repo).
 
 | Platform | Installer |
 |----------|-----------|
-| **Windows (x64)** | [`Jarvis-Setup-*-x64.exe`](https://github.com/yhongm/jarvis/releases/latest) — NSIS wizard |
+| **Windows (x64)** | [`Jarvis-Setup-*-x64.exe`](releases/latest) — NSIS wizard |
 | **macOS (Apple Silicon)** | `Jarvis-Setup-*-macos-aarch64.pkg` |
 | **macOS (Intel)** | `Jarvis-Setup-*-macos-x86_64.pkg` |
 
-👉 **[All releases](https://github.com/yhongm/jarvis/releases/latest)**  
-Replace `yhongm` with your GitHub username or org when publishing.
+👉 **[All releases](releases/latest)**
 
 ---
 
@@ -229,7 +228,7 @@ A: `JarvisAgent --mcp --config path/to/config.toml`
 | Maintainer docs | [DEVELOPMENT.md](DEVELOPMENT.md) |
 | macOS packaging | [docs/PACKAGING-MACOS.md](docs/PACKAGING-MACOS.md) |
 | Windows packaging | [docs/PACKAGING-NSIS.md](docs/PACKAGING-NSIS.md) |
-| Releases | https://github.com/yhongm/jarvis/releases/latest |
+| Releases | [releases/latest](releases/latest) |
 
 ---
 

@@ -34,12 +34,11 @@ Releases **不提供**便携 ZIP / tar.gz，**仅提供安装包**。
 
 | 平台 | 安装包 |
 |------|--------|
-| **Windows (x64)** | [`Jarvis-Setup-*-x64.exe`](https://github.com/yhongm/jarvis/releases/latest) — NSIS 向导 |
+| **Windows (x64)** | [`Jarvis-Setup-*-x64.exe`](releases/latest) — NSIS 向导 |
 | **macOS (Apple Silicon)** | `Jarvis-Setup-*-macos-aarch64.pkg` |
 | **macOS (Intel)** | `Jarvis-Setup-*-macos-x86_64.pkg` |
 
-👉 **[全部版本](https://github.com/yhongm/jarvis/releases/latest)**  
-发布时将 `yhongm` 替换为你的 GitHub 用户名或组织名。
+👉 **[全部版本](releases/latest)**
 
 ---
 
@@ -221,7 +220,7 @@ shasum -a 256 Jarvis-Setup-0.0.1-macos-aarch64.pkg
 |---|---|
 | English | [README.md](README.md) |
 | 开发文档 | [DEVELOPMENT.md](DEVELOPMENT.md) |
-| 最新版本 | https://github.com/yhongm/jarvis/releases/latest |
+| 最新版本 | [releases/latest](releases/latest) |
 
 ---
 

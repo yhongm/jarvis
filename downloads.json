@@ -1,7 +1,7 @@
 ﻿{
     "product":  "Jarvis",
     "version":  "0.0.1",
-    "built_at":  "2026-06-03 17:25:21",
+    "built_at":  "2026-06-03 18:17:10",
     "artifacts":  [
                       {
                           "id":  "installer-windows",
