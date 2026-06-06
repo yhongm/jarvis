@@ -1,27 +1,27 @@
 ﻿{
-    "product":  "Jarvis",
-    "version":  "0.0.1",
-    "built_at":  "2026-06-04 18:28:25",
-    "artifacts":  [
-                      {
-                          "id":  "installer-windows",
-                          "kind":  "installer",
-                          "platform":  "windows",
-                          "label_zh":  "Windows 瀹夎鍖?(x64)",
-                          "label_en":  "Windows Installer (x64)",
-                          "file":  "Jarvis-Setup-0.0.1-x64.exe",
-                          "size_bytes":  7237359,
-                          "sha256":  "a2f9028923926c5f07d08f3443e54dc4c7fdc78319dc4bbf18a59a134b62aacf"
-                      },
-                      {
-                          "id":  "installer-macos",
-                          "kind":  "installer",
-                          "platform":  "macos",
-                          "label_zh":  "macOS 瀹夎鍖?(Apple Silicon)",
-                          "label_en":  "macOS Installer (Apple Silicon)",
-                          "file":  "Jarvis-Setup-0.0.1-macos-aarch64.pkg",
-                          "size_bytes":  7826713,
-                          "sha256":  "0dde30b95f29378bf55e8bffd792bd08473673d6e85c635dc48862e88e975c79"
-                      }
-                  ]
+  "product": "Jarvis",
+  "version": "0.0.2",
+  "built_at": "2026-06-06 10:53:50",
+  "artifacts": [
+    {
+      "id": "installer-windows",
+      "kind": "installer",
+      "platform": "windows",
+      "label_zh": "Windows 安装包 (x64)",
+      "label_en": "Windows Installer (x64)",
+      "file": "Jarvis-Setup-0.0.2-x64.exe",
+      "size_bytes": 9985149,
+      "sha256": "dcefcb83ba4a1d1d18a0bfa86c632e9be220788dd164672859ce461148b5bf15"
+    },
+    {
+      "id": "installer-macos",
+      "kind": "installer",
+      "platform": "macos",
+      "label_zh": "macOS 安装包 (Apple Silicon)",
+      "label_en": "macOS Installer (Apple Silicon)",
+      "file": "Jarvis-Setup-0.0.2-macos-aarch64.pkg",
+      "size_bytes": 10676190,
+      "sha256": "6a9b1d9e0b5e5de90700b75d953fdfad67e04a6705785e140a4da5df4e31eba6"
+    }
+  ]
 }
