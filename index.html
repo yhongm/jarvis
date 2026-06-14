@@ -505,7 +505,7 @@
         <div class="install-block">
           <h3>macOS</h3>
           <ol class="steps">
-            <li>从上方或 GitHub Releases 下载对应架构的 <strong>Setup .pkg</strong>（Apple Silicon 或 Intel）。</li>
+            <li>从上方或 GitHub Releases 下载 <strong>Setup .pkg</strong>（Apple Silicon）。</li>
             <li>双击安装后，在「应用程序」中打开 <strong>Jarvis</strong>（自动启动 gateway）。</li>
             <li>浏览器打开 <code>http://127.0.0.1:8080/webui/</code>，在 <strong>配置</strong> 中填写 API Key。</li>
             <li>若 config 含 Windows 路径，Skills 向导会自动跳过并引导选择本机目录。</li>
@@ -601,7 +601,7 @@
     }
     function platformLabel(p) {
       if (p === 'windows') return { title: 'Windows', tag: 'x64' };
-      if (p === 'macos') return { title: 'macOS', tag: 'Apple Silicon / Intel' };
+      if (p === 'macos') return { title: 'macOS', tag: 'Apple Silicon' };
       return { title: '其他', tag: '' };
     }
     function appendArtifactRow(container, a) {
