@@ -1,7 +1,7 @@
 # Jarvis
 
 **Windows / macOS 本地 AI 智能体** — Rust 单二进制、每平台一个安装包。  
-Web 控制台、飞书 / Telegram、内置工具、标准 Skills、MCP、定时任务、无头浏览器。
+Web 控制台、飞书 / Telegram / **Discord**、内置工具、标准 Skills、MCP、定时任务、无头浏览器。
 
 **English → [README.md](README.md)**
 
@@ -34,11 +34,9 @@ Releases **不提供**便携 ZIP / tar.gz，**仅提供安装包**。
 
 | 平台 | 安装包 |
 |------|--------|
-| **Windows (x64)** | [`Jarvis-Setup-*-x64.exe`](releases/latest) — NSIS 向导 |
+| **Windows (x64)** | `Jarvis-Setup-*-x64.exe` — NSIS 向导 |
 | **macOS (Apple Silicon)** | `Jarvis-Setup-*-macos-aarch64.pkg` |
-| **macOS (Intel)** | `Jarvis-Setup-*-macos-x86_64.pkg` |
 
-👉 **[全部版本](releases/latest)**
 
 ---
 
@@ -57,7 +55,17 @@ Releases **不提供**便携 ZIP / tar.gz，**仅提供安装包**。
 2. 在 **应用程序** 中打开 **Jarvis**（自动启动 gateway）。
 3. 浏览器 **http://127.0.0.1:8080/webui/** → **配置**。
 
-用户数据：`~/Library/Application Support/Jarvis/config.toml`
+**配置文件在哪？以 Web 控制台「配置」页标题旁显示的路径为准**（即当前进程实际读写的文件）。
+
+| 安装 / 启动方式 | 典型路径 |
+|-----------------|----------|
+| `.pkg` 安装后双击 **Jarvis.app** | `~/Library/Application Support/Jarvis/config.toml` |
+| 命令行 `JarvisAgent --gateway`（无 `--config`） | 同上（首次启动会自动创建目录） |
+| 仓库内 `cargo run` 或 SSH 部署 | 仓库根目录 `config.toml`（若存在则优先于用户目录） |
+| 显式指定 | `--config /path/to/config.toml` 或环境变量 `JARVIS_CONFIG` |
+
+`~` 即 `/Users/你的用户名`。Finder 中按 **⌘⇧G**，粘贴 Web 上显示的完整路径即可打开目录。  
+**注意**：`Library` 为隐藏文件夹；若从未成功启动过 Jarvis，用户数据目录可能尚未创建。
 
 ---
 
@@ -78,6 +86,8 @@ Agent 可调用以下工具（受 **allowed dirs** 与敏感操作 **yes/no** �
 | **disk_report** | 磁盘占用与缓存提示 |
 | **system_report** | CPU / 内存 / 进程概览 |
 | **headless** | 抓取或爬取网页（静态 HTTP 或 Chromium） |
+| **code** | 代码读写/搜索/符号定位/重命名（Tree-sitter AST，类 Cursor Agent） |
+| **document** | PDF / Word / Excel / PPT 解析与编辑 |
 | **skill** | 加载与路由 **Skills** |
 | **scheduler** | 创建与管理 **定时任务** |
 | **project_scan** | 项目结构扫描 |
@@ -101,7 +111,12 @@ Agent 可调用以下工具（受 **allowed dirs** 与敏感操作 **yes/no** �
 ### 定时任务
 
 - 内置 **scheduler** 工具与网关后台调度。
-- 可在 Web UI 或由 Agent 创建类 cron 任务；配置通道后可向飞书 / Telegram 推送结果。
+- 可在 Web UI 或由 Agent 创建类 cron 任务；配置通道后可向飞书 / Telegram / **Discord** / Web 推送结果。
+
+### 代码与文档工具（v0.0.6+）
+
+- **`code`** — 统一编码工具：读/写/编辑/搜索、工程树概览、**符号定义/引用**、跨文件重命名；Rust / TS / Python 等由 Tree-sitter 解析。
+- **`document`** — 提取或编辑 **PDF、DOCX、XLSX、PPTX**（文本替换、表格读取、Markdown 转 Office 等）。
 
 ### 无头浏览器
 
@@ -113,9 +128,12 @@ Agent 可调用以下工具（受 **allowed dirs** 与敏感操作 **yes/no** �
 
 | 功能 | 说明 |
 |------|------|
-| **Web UI** | 对话、配置、通道、Skills、终端 |
+| **Web UI** | 对话、配置、通道向导、Skills、定时任务 |
 | **飞书** | 长连接机器人，手机遥控本机 |
-| **Telegram** | Bot Token 向导绑定 |
+| **Telegram** | Bot Token 向导绑定，长轮询收消息 |
+| **Discord** | Bot Token 验证、Gateway 长连接、一键生成邀请链接 |
+| **企业微信** | Webhook 回调（`config.toml` 或 API） |
+| **通道审计** | `logs/channel-audit.jsonl` 记录入站/出站（调试模式更详细） |
 | **安全** | Shell、目录访问等需对话中 **yes** / **no** |
 | **LLM** | MiniMax、OpenAI 兼容 API、本地 llama.cpp |
 
@@ -128,7 +146,7 @@ Agent 可调用以下工具（受 **allowed dirs** 与敏感操作 **yes/no** �
 | 入口 | 可配置项 |
 |------|----------|
 | **配置** | LLM、API Key、Model · Listen · **Allowed dirs** · Skills 目录 · 爬虫引擎 |
-| **通道** | 飞书、Telegram — 验证并保存 |
+| **通道** | 飞书、Telegram、**Discord** — 验证 Bot/应用凭证并保存 |
 | **Skills** | 目录、重载、内置技能 |
 | **对话** | 聊天，支持图片 |
 
@@ -136,7 +154,7 @@ Agent 可调用以下工具（受 **allowed dirs** 与敏感操作 **yes/no** �
 
 1. 安装并启动网关。
 2. Web UI → **配置** → API Key + Model → **保存**（自动重启）。
-3. （可选）**通道** → 飞书 → 验证并保存。
+3. （可选）**通道** → 飞书 / Telegram / **Discord** → 验证并保存。
 4. （可选）设置 **Allowed dirs**。
 
 ### macOS 专属（配置页）
@@ -146,7 +164,9 @@ Agent 可调用以下工具（受 **allowed dirs** 与敏感操作 **yes/no** �
 
 ### Windows 专属（配置页）
 
-- **登录自启动**（按平台支持）
+- **登录自启动**（当前用户注册表 Run）
+- **后台运行** — 勾选后隐藏控制台；保存时可自动切换到独立后台进程（关终端不影响 gateway）
+- **立即切换到后台** — 配置页一键 detach
 
 ---
 
@@ -155,7 +175,7 @@ Agent 可调用以下工具（受 **allowed dirs** 与敏感操作 **yes/no** �
 | 系统 | 路径 |
 |------|------|
 | Windows | `%LOCALAPPDATA%\Jarvis\config.toml` |
-| macOS | `~/Library/Application Support/Jarvis/config.toml` |
+| macOS | `~/Library/Application Support/Jarvis/config.toml`（=`/Users/<用户名>/Library/Application Support/Jarvis/config.toml`） |
 
 ```toml
 [llm]
@@ -171,6 +191,9 @@ allowed_dirs = "/Users/you/projects"
 [channels.feishu]
 app_id = "cli_xxx"
 app_secret = "xxx"
+
+[channels.discord]
+bot_token = "your-discord-bot-token"
 ```
 
 环境变量：`MINIMAX_API_KEY`、`JARVIS_CONFIG`、`JARVIS_HOME` 等。
@@ -183,12 +206,19 @@ app_secret = "xxx"
 - 授权提示请回复 **yes** / **no**。
 - 建议在 **Web UI → 通道** 配置飞书。
 
+## Discord 提示
+
+- 在 [Discord Developer Portal](https://discord.com/developers/applications) 创建应用并启用 **Bot**。
+- 开启 **Message Content Intent**（读取消息文本）。
+- Web UI **通道 → Discord**：粘贴 Bot Token → 验证 → 保存；向导会给出 **邀请链接**。
+- 将 Bot 邀请到你的服务器后，在频道 @Bot 或私信即可对话（与 Web/飞书共用 Agent）。
+
 ---
 
 ## 校验安装包（可选）
 
 ```bash
-shasum -a 256 Jarvis-Setup-0.0.1-macos-aarch64.pkg
+shasum -a 256 Jarvis-Setup-0.0.6-macos-aarch64.pkg
 ```
 
 与 Releases 中的 `.sha256` 对比。
@@ -197,20 +227,16 @@ shasum -a 256 Jarvis-Setup-0.0.1-macos-aarch64.pkg
 
 ## 常见问题
 
-**问：为什么没有便携 ZIP？**  
-答：安装包路径统一、少踩坑。高级用户仍可用 `JarvisAgent --config` 指定任意配置文件。
 
 **问：Mac 有没有像 NSIS 的一键安装？**  
 答：有，**`Jarvis-Setup-*-macos-*.pkg`**。
 
-**问：本仓库有源码吗？**  
-答：用户向仓库仅安装包与文档；开发文档见 [DEVELOPMENT.md](DEVELOPMENT.md)。
+
 
 **问：8080 被占用？**  
 答：Web **配置** 或 `config.toml` 修改 Listen。
 
-**问：Cursor 怎么用 MCP？**  
-答：`JarvisAgent --mcp --config path/to/config.toml`
+
 
 ---
 
@@ -219,9 +245,6 @@ shasum -a 256 Jarvis-Setup-0.0.1-macos-aarch64.pkg
 | | |
 |---|---|
 | English | [README.md](README.md) |
-| 开发文档 | [DEVELOPMENT.md](DEVELOPMENT.md) |
-| 最新版本 | [releases/latest](releases/latest) |
-
 ---
 
 ## 许可证

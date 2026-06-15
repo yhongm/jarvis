@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jarvis — 单文件本地智能体 · Windows / macOS 下载</title>
-  <meta name="description" content="Jarvis：Rust 单可执行文件智能体。分层记忆、Web 聊天图片多模态、Skills 跨平台引导、Skill、Shell、定时任务、无头爬虫、飞书机器人。无需 Node.js。">
+  <meta name="description" content="Jarvis：Rust 单可执行文件智能体。Discord / 飞书 / Telegram 多通道、代码与文档工具、Web 多模态、Skills、定时任务、无头爬虫。无需 Node.js。">
   <link rel="icon" href="assets/jarvis-icon.svg" type="image/svg+xml">
   <link rel="icon" href="assets/favicon.ico" sizes="32x32">
   <link rel="apple-touch-icon" href="assets/jarvis-icon-256.png">
@@ -343,11 +343,14 @@
         <h1>轻便、完整、<span class="accent">单文件</span>的桌面智能体</h1>
         <p class="hero-copy">
           Jarvis 用 Rust 写成<strong>一个可执行文件</strong>，内嵌 Web 控制台与工具链。
-          自带分层记忆、Web 聊天图片多模态、Skills 跨平台目录引导与完整 Skill 扩展——
+          自带分层记忆、Web 聊天图片多模态、**Discord / 飞书 / Telegram** 多通道、
+          Tree-sitter **代码**与 **Office/PDF 文档**工具——
           <strong>无需安装 Node.js、Python 或 Docker</strong> 才能运行本体（仅爬虫可选本机 Chrome）。
         </p>
         <div class="pills">
           <span class="pill"><strong>单文件</strong> 分发</span>
+          <span class="pill">Discord 通道</span>
+          <span class="pill">code · document</span>
           <span class="pill">聊天图片多模态</span>
           <span class="pill">Skills 跨平台</span>
           <span class="pill">零 Node 依赖</span>
@@ -364,11 +367,12 @@
           <img src="assets/jarvis-icon.svg" alt="">
           <ul>
             <li>单文件可执行：网关 + Agent 循环 + Web UI</li>
+            <li>Discord / 飞书 / Telegram 通道向导，统一 dispatch</li>
             <li>Web 聊天框上传图片，多模态交给视觉模型</li>
+            <li>code 工具：符号定位/重命名；document：PDF/Office</li>
             <li>Skills 向导：Claude / Cursor / 内置目录</li>
             <li>MEMORY / USER / ERRORS 长期记忆</li>
-            <li>飞书机器人与局域网 Web 同一套逻辑</li>
-            <li>MCP · OpenAI 兼容 API · 本地 llama</li>
+            <li>Windows 后台运行 · macOS LaunchAgent 自启动</li>
           </ul>
         </div>
       </div>
@@ -451,8 +455,25 @@
       </article>
       <article class="feat span-6">
         <div class="feat-icon"><svg aria-hidden="true"><use href="#web"></use></svg></div>
+        <h3>Discord · Telegram</h3>
+        <p>Web UI 通道向导：Discord Bot Token 验证 + 邀请链接；Telegram 长轮询。定时任务结果可推送到各通道。</p>
+        <span class="feat-tag">Gateway WebSocket</span>
+      </article>
+      <article class="feat span-6">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#fs"></use></svg></div>
+        <h3>代码工具 code</h3>
+        <p>读/写/搜索/编辑、工程树、符号定义与引用、跨文件重命名；Tree-sitter 解析 Rust / TS / Python 等。</p>
+        <span class="feat-tag">Tree-sitter AST</span>
+      </article>
+      <article class="feat span-6">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#skill"></use></svg></div>
+        <h3>文档工具 document</h3>
+        <p>解析与编辑 PDF、Word、Excel、PowerPoint；提取文本、表格替换、Markdown 转 Office。</p>
+      </article>
+      <article class="feat span-6">
+        <div class="feat-icon"><svg aria-hidden="true"><use href="#web"></use></svg></div>
         <h3>Web 控制台</h3>
-        <p>Material 风格聊天（含图片上传）、Skills / 通道配置向导、定时任务与 MCP 管理；WebSocket 流式输出，局域网可访问。</p>
+        <p>Material 风格聊天（含图片上传）、Skills / 通道配置向导、定时任务与 MCP 管理；Windows 支持登录自启动与后台运行。</p>
       </article>
     </div>
 
@@ -463,7 +484,8 @@
           <li>单个 jarvis.exe，内嵌 Web UI 静态资源</li>
           <li>无需 Node / npm / pnpm 环境</li>
           <li>记忆、人格、错误库本地 Markdown</li>
-          <li>Web 图片多模态 + Skills 跨平台引导</li>
+          <li>Discord / 飞书 / Telegram 多通道 + Web 多模态</li>
+          <li>code · document 工具，Tree-sitter 与 Office/PDF</li>
           <li>Windows / macOS 均从 GitHub Releases 下载</li>
         </ul>
       </div>

@@ -47,16 +47,27 @@
   <header>
     <img class="logo" src="assets/jarvis-icon.svg" width="80" height="80" alt="Jarvis">
     <h1>Jarvis</h1>
-    <p class="tagline">单文件本地智能体 · 多模态聊天 · 跨平台 Skills · 零 Node 运行时依赖</p>
+    <p class="tagline">单文件本地智能体 · 多通道 · 代码/文档工具 · 零 Node 运行时依赖</p>
   </header>
 
   <div class="highlight">
-    <strong>一个 exe 搞定：</strong>Agent 循环、工具调用、内嵌 Web 控制台、飞书/Web 通道。
+    <strong>一个 exe 搞定：</strong>Agent 循环、工具调用、内嵌 Web 控制台、
+    飞书 / Telegram / <strong>Discord</strong> 多通道。
     无需安装 Node.js 或 Python 来运行 Jarvis 本体。
   </div>
 
   <div class="card">
-    <h2>Web 控制台新能力</h2>
+    <h2>多通道消息（v0.0.6+）</h2>
+    <ul>
+      <li><strong>Discord</strong> — Bot Token 验证、邀请链接、Gateway 长连接</li>
+      <li><strong>Telegram</strong> — BotFather Token 向导</li>
+      <li><strong>飞书</strong> — 长连接，与 Web 共用 dispatch</li>
+      <li><strong>定时任务</strong> — 结果可推送到 Web / 飞书 / Telegram / Discord</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Web 控制台</h2>
     <ul>
       <li><strong>聊天图片多模态</strong> — 输入框左下角上传图片（最多 4 张、单张 ≤ 4MB），预览后随消息发送；以 Multimodal 格式交给大模型分析</li>
       <li><strong>视觉模型</strong> — 是否支持图片由所选模型 API 决定（如 gpt-4o、MiniMax 多模态等），Jarvis 不提前拦截</li>
@@ -94,13 +105,22 @@
       <li><strong>无头爬虫</strong> — Chromium 渲染动态网页，搜索 + 抓取落盘</li>
       <li><strong>系统 / 磁盘报告</strong> — Windows、macOS、Linux 三端系统与磁盘信息</li>
       <li><strong>Git / Docker / 搜索</strong> — 常用开发工具一应俱全</li>
+      <li><strong>code</strong> — Tree-sitter 符号定位/引用/重命名</li>
+      <li><strong>document</strong> — PDF / DOCX / XLSX / PPTX 解析与编辑</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Windows 后台运行</h2>
+    <ul>
+      <li><strong>登录自启动</strong> — 配置页一键启用，写入注册表 Run</li>
+      <li><strong>后台运行</strong> — 隐藏控制台，保存后切换到独立进程（关终端不影响服务）</li>
     </ul>
   </div>
 
   <div class="card">
     <h2>连接与模型</h2>
     <ul>
-      <li><strong>飞书 / Telegram</strong> — 通道向导扫码或 Token 配置，与 Web 共用 dispatch 逻辑</li>
       <li><strong>Web 控制台</strong> — 局域网 WebSocket，流式对话、配置与通道管理</li>
       <li><strong>MCP</strong> — 对接 Cursor、Claude 等客户端</li>
       <li><strong>模型</strong> — OpenAI 兼容 API（MiniMax、DeepSeek 等）、本地 llama.cpp</li>
@@ -112,7 +132,7 @@
     <ul>
       <li><strong>下载</strong> — Windows / macOS 安装包见 <a href="https://github.com/yhongm/jarvis/releases/latest">GitHub Releases</a>；下载站 <code>config.json</code> 可配置直链</li>
       <li>编辑 <code>config.toml</code>（安装目录或 <code>%LOCALAPPDATA%\Jarvis\</code> / Mac 同级目录）配置 API Key 与 <code>skills_dir</code>（推荐相对路径 <code>skills</code>）</li>
-      <li>Windows：运行 <code>jarvis.exe --gateway</code>；macOS：<code>./jarvis-agent --gateway</code></li>
+      <li>Windows：运行 <code>JarvisAgent.exe --gateway</code>；macOS：打开应用程序中的 Jarvis</li>
       <li>打开 <code>http://127.0.0.1:8080/webui/</code>；打开 <strong>Skills</strong> 标签配置目录</li>
       <li>在聊天框输入文字，或点击左下角图片按钮上传后进行多模态提问</li>
     </ul>

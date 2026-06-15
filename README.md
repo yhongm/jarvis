@@ -1,7 +1,7 @@
 # Jarvis
 
 **Local AI agent for Windows & macOS** — one native binary, one installer per platform.  
-Web console, Feishu / Telegram bots, tools, Skills, MCP, scheduled tasks, headless browser.
+Web console, Feishu / Telegram / **Discord** bots, tools, Skills, MCP, scheduled tasks, headless browser.
 
 **中文介绍 → [README_CN.md](README_CN.md)**
 
@@ -34,9 +34,9 @@ Pre-built **installers only** (no source code in this repo).
 
 | Platform | Installer |
 |----------|-----------|
-| **Windows (x64)** | [`Jarvis-Setup-*-x64.exe`](releases/latest) — NSIS wizard |
+| **Windows (x64)** | `Jarvis-Setup-*-x64.exe` — NSIS wizard |
 | **macOS (Apple Silicon)** | `Jarvis-Setup-*-macos-aarch64.pkg` |
-| **macOS (Intel)** | `Jarvis-Setup-*-macos-x86_64.pkg` |
+
 
 👉 **[All releases](releases/latest)**
 
@@ -57,7 +57,16 @@ Pre-built **installers only** (no source code in this repo).
 2. Open **Jarvis** from **Applications** (starts gateway).
 3. Open **http://127.0.0.1:8080/webui/** → **配置** for API key and options.
 
-User data: `~/Library/Application Support/Jarvis/config.toml`
+**Where is `config.toml`?** Trust the path shown next to **配置** in the Web UI — that is the file the running process uses.
+
+| How you start Jarvis | Typical path |
+|----------------------|--------------|
+| `.pkg` install + **Jarvis.app** | `~/Library/Application Support/Jarvis/config.toml` |
+| `JarvisAgent --gateway` (no `--config`) | Same (directory is created on first start) |
+| `cargo run` / repo deploy | Repo root `config.toml` if it already exists |
+| Explicit | `--config` or `JARVIS_CONFIG` |
+
+In Finder, press **⌘⇧G** and paste the full path from the Web UI. `Library` is hidden; the folder may not exist until Jarvis has started successfully once.
 
 ---
 
@@ -78,6 +87,8 @@ The agent can call these tools (subject to **allowed dirs** and **yes/no** autho
 | **disk_report** | Disk usage & cache hints |
 | **system_report** | CPU / memory / process overview |
 | **headless** | Fetch or crawl pages (static HTTP or Chromium) |
+| **code** | Read/write/search code, symbol locate/rename (Tree-sitter AST, Cursor-like) |
+| **document** | Parse & edit PDF / Word / Excel / PowerPoint |
 | **skill** | Load and route **Skills** |
 | **scheduler** | Create and manage **scheduled tasks** |
 | **project_scan** | Scan project layout |
@@ -101,7 +112,12 @@ The agent can call these tools (subject to **allowed dirs** and **yes/no** autho
 ### Scheduled tasks
 
 - Built-in **scheduler** tool and gateway background runner.
-- Define cron-like jobs in Web UI or via agent; notifications can go to Feishu / Telegram when channels are configured.
+- Define cron-like jobs in Web UI or via agent; notifications can go to Feishu / Telegram / **Discord** / Web when channels are configured.
+
+### Code & document tools (v0.0.6+)
+
+- **`code`** — Unified coding tool: read/write/edit/search, project tree, **symbol def/refs**, cross-file rename; Tree-sitter for Rust, TS, Python, etc.
+- **`document`** — Extract or edit **PDF, DOCX, XLSX, PPTX** (text replace, sheet read, Markdown → Office, etc.).
 
 ### Headless browser
 
@@ -113,9 +129,12 @@ The agent can call these tools (subject to **allowed dirs** and **yes/no** autho
 
 | Feature | Description |
 |---------|-------------|
-| **Web UI** | Chat, settings, channels, skills, terminal |
+| **Web UI** | Chat, settings, channel wizards, skills, scheduled tasks |
 | **Feishu / Lark** | Long-connection bot — control your PC from mobile |
-| **Telegram** | Bot token via setup wizard |
+| **Telegram** | Bot token wizard, long polling |
+| **Discord** | Bot token verify, Gateway WebSocket, invite URL generator |
+| **WeCom** | Enterprise WeChat webhook callback |
+| **Channel audit** | `logs/channel-audit.jsonl` for inbound/outbound (verbose in debug mode) |
 | **Safety** | Shell, directory access, and risky ops require **yes** / **no** in chat |
 | **LLM** | MiniMax, OpenAI-compatible APIs, local llama.cpp |
 
@@ -128,7 +147,7 @@ The agent can call these tools (subject to **allowed dirs** and **yes/no** autho
 | Tab | Configure |
 |-----|-----------|
 | **Settings / 配置** | LLM provider, API key, model · listen address · **allowed dirs** · skills dir · headless engine |
-| **Channels / 通道** | Feishu, Telegram — verify & save |
+| **Channels / 通道** | Feishu, Telegram, **Discord** — verify & save |
 | **Skills** | Directory, reload, built-in skills |
 | **Chat** | Talk to the agent; image upload supported |
 
@@ -136,7 +155,7 @@ The agent can call these tools (subject to **allowed dirs** and **yes/no** autho
 
 1. Install and start gateway (shortcut or **Jarvis.app**).
 2. Open Web UI → **Settings** → API key + model → **Save** (gateway restarts).
-3. (Optional) **Channels** → Feishu credentials → **Verify & save**.
+3. (Optional) **Channels** → Feishu / Telegram / **Discord** → **Verify & save**.
 4. (Optional) Set **Allowed dirs** for folders the agent may read.
 
 ### macOS-only (Settings)
@@ -146,7 +165,9 @@ The agent can call these tools (subject to **allowed dirs** and **yes/no** autho
 
 ### Windows-only (Settings)
 
-- **Login autostart** where supported
+- **Login autostart** (HKCU Run key)
+- **Run in background** — hide console; saving settings can detach to an independent process (closing the terminal won't stop gateway)
+- **Switch to background now** — one-click detach without reinstall
 
 ---
 
@@ -155,7 +176,7 @@ The agent can call these tools (subject to **allowed dirs** and **yes/no** autho
 | OS | Path |
 |----|------|
 | Windows | `%LOCALAPPDATA%\Jarvis\config.toml` |
-| macOS | `~/Library/Application Support/Jarvis/config.toml` |
+| macOS | `~/Library/Application Support/Jarvis/config.toml` (= `/Users/<username>/Library/Application Support/Jarvis/config.toml`) |
 
 ```toml
 [llm]
@@ -171,6 +192,9 @@ allowed_dirs = "/Users/you/projects"
 [channels.feishu]
 app_id = "cli_xxx"
 app_secret = "xxx"
+
+[channels.discord]
+bot_token = "your-discord-bot-token"
 ```
 
 Environment variables (optional): `MINIMAX_API_KEY`, `OPENAI_API_KEY`, `JARVIS_CONFIG`, `JARVIS_HOME`.
@@ -185,16 +209,23 @@ Environment variables (optional): `MINIMAX_API_KEY`, `OPENAI_API_KEY`, `JARVIS_C
 - Reply **yes** or **no** when asked to authorize shell or directory access.
 - Prefer **Web UI → Channels** over hand-editing secrets.
 
+## Discord tips
+
+- Create an app in the [Discord Developer Portal](https://discord.com/developers/applications) and add a **Bot**.
+- Enable **Message Content Intent** so the bot can read message text.
+- **Web UI → Channels → Discord**: paste bot token → verify → save; wizard provides an **invite URL**.
+- After inviting the bot to your server, mention it in a channel or DM — same agent as Web/Feishu.
+
 ---
 
 ## Verify checksum (optional)
 
 ```powershell
-Get-FileHash .\Jarvis-Setup-0.0.1-x64.exe -Algorithm SHA256
+Get-FileHash .\Jarvis-Setup-0.0.6-x64.exe -Algorithm SHA256
 ```
 
 ```bash
-shasum -a 256 Jarvis-Setup-0.0.1-macos-aarch64.pkg
+shasum -a 256 Jarvis-Setup-0.0.6-macos-aarch64.pkg
 ```
 
 Compare with the `.sha256` file in Releases.
@@ -203,11 +234,6 @@ Compare with the `.sha256` file in Releases.
 
 ## FAQ
 
-**Q: Is source code in this repo?**  
-A: No — releases and user docs only. Developers with source use [DEVELOPMENT.md](DEVELOPMENT.md).
-
-**Q: Why no portable ZIP?**  
-A: Installers give a consistent layout and fewer support issues. Power users can still run `JarvisAgent` from a custom path with `--config`.
 
 **Q: Mac equivalent of Windows NSIS?**  
 A: **`Jarvis-Setup-*-macos-*.pkg`** (optional `.dmg` for drag-to-Applications when published).
@@ -225,10 +251,7 @@ A: `JarvisAgent --mcp --config path/to/config.toml`
 | | |
 |---|---|
 | 中文文档 | [README_CN.md](README_CN.md) |
-| Maintainer docs | [DEVELOPMENT.md](DEVELOPMENT.md) |
-| macOS packaging | [docs/PACKAGING-MACOS.md](docs/PACKAGING-MACOS.md) |
-| Windows packaging | [docs/PACKAGING-NSIS.md](docs/PACKAGING-NSIS.md) |
-| Releases | [releases/latest](releases/latest) |
+ 
 
 ---
 
