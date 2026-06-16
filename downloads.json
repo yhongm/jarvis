@@ -1,7 +1,7 @@
 ﻿{
   "product": "Jarvis",
   "version": "0.0.8",
-  "built_at": "2026-06-16 11:21:59",
+  "built_at": "2026-06-16 13:42:08",
   "artifacts": [
     {
       "id": "installer-windows",
@@ -10,8 +10,8 @@
       "label_zh": "Windows 安装包 (x64)",
       "label_en": "Windows Installer (x64)",
       "file": "Jarvis-Setup-0.0.8-x64.exe",
-      "size_bytes": 10187863,
-      "sha256": "5b69578506c9f6bb5f8d6301d8028c0d0fb674915e05211c3fcfbe6ccbbda1de"
+      "size_bytes": 10192840,
+      "sha256": "e995ae6c9f65316eace748b9ce12e885fde7819a15fac02ce062d61b7668944b"
     },
     {
       "id": "installer-macos",
