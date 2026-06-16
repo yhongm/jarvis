@@ -1,7 +1,7 @@
 ﻿{
   "product": "Jarvis",
-  "version": "0.0.8",
-  "built_at": "2026-06-16 13:42:08",
+  "version": "0.0.9",
+  "built_at": "2026-06-16 14:57:30",
   "artifacts": [
     {
       "id": "installer-windows",
@@ -9,9 +9,9 @@
       "platform": "windows",
       "label_zh": "Windows 安装包 (x64)",
       "label_en": "Windows Installer (x64)",
-      "file": "Jarvis-Setup-0.0.8-x64.exe",
-      "size_bytes": 10192840,
-      "sha256": "e995ae6c9f65316eace748b9ce12e885fde7819a15fac02ce062d61b7668944b"
+      "file": "Jarvis-Setup-0.0.9-x64.exe",
+      "size_bytes": 10189322,
+      "sha256": "2cb5ab8e26a1e831fbf33930162cbf4251bfd8e38971aacf46603beb2c1a1aa6"
     },
     {
       "id": "installer-macos",
@@ -19,9 +19,9 @@
       "platform": "macos",
       "label_zh": "macOS 安装包 (Apple Silicon)",
       "label_en": "macOS Installer (Apple Silicon)",
-      "file": "Jarvis-Setup-0.0.8-macos-aarch64.pkg",
-      "size_bytes": 10841057,
-      "sha256": "705f39f2498d25d908566edd8312e8efcd6867e91287ee8443bd912cc3be1d66"
+      "file": "Jarvis-Setup-0.0.9-macos-aarch64.pkg",
+      "size_bytes": 10837111,
+      "sha256": "a343e391e41dec58cb0979c4eb4934d1bba721d0e1865530e30c9f7b6af38b26"
     }
   ]
 }
