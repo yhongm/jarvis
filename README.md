@@ -36,10 +36,6 @@ Pre-built **installers only** (no source code in this repo).
 |----------|-----------|
 | **Windows (x64)** | `Jarvis-Setup-*-x64.exe` — NSIS wizard |
 | **macOS (Apple Silicon)** | `Jarvis-Setup-*-macos-aarch64.pkg` |
-
-
-👉 **[All releases](releases/latest)**
-
 ---
 
 ## Quick install
