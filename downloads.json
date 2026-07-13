@@ -1,27 +1,27 @@
 ﻿{
-  "product": "Jarvis",
-  "version": "0.1.4",
-  "built_at": "2026-06-25 11:19:25",
-  "artifacts": [
-    {
-      "id": "installer-windows",
-      "kind": "installer",
-      "platform": "windows",
-      "label_zh": "Windows 安装包 (x64)",
-      "label_en": "Windows Installer (x64)",
-      "file": "Jarvis-Setup-0.1.4-x64.exe",
-      "size_bytes": 10807544,
-      "sha256": "48f2e3b7fcb1be715456f195762fa8b4a201f6e78c4e0ed10b4d0895b63d9d20"
-    },
-    {
-      "id": "installer-macos",
-      "kind": "installer",
-      "platform": "macos",
-      "label_zh": "macOS 安装包 (Apple Silicon)",
-      "label_en": "macOS Installer (Apple Silicon)",
-      "file": "Jarvis-Setup-0.1.4-macos-aarch64.pkg",
-      "size_bytes": 11524178,
-      "sha256": "ca3f3f10273f887f24e9d0166f525c7a73e6a47a60179cdedadf6a547bb4c9da"
-    }
-  ]
+    "product":  "Jarvis",
+    "version":  "0.1.5",
+    "built_at":  "2026-07-13 14:45:51",
+    "artifacts":  [
+                      {
+                          "id":  "installer-windows",
+                          "kind":  "installer",
+                          "platform":  "windows",
+                          "label_zh":  "Windows 瀹夎鍖?(x64)",
+                          "label_en":  "Windows Installer (x64)",
+                          "file":  "Jarvis-Setup-0.1.5-x64.exe",
+                          "size_bytes":  11351177,
+                          "sha256":  "4dbe19e7b53bc27c68a73abc3da8cd6114437ab536a7ad95d756c9ce8340aa81"
+                      },
+                      {
+                          "id":  "installer-macos",
+                          "kind":  "installer",
+                          "platform":  "macos",
+                          "label_zh":  "macOS 瀹夎鍖?(Apple Silicon)",
+                          "label_en":  "macOS Installer (Apple Silicon)",
+                          "file":  "Jarvis-Setup-0.1.5-macos-aarch64.pkg",
+                          "size_bytes":  12045034,
+                          "sha256":  "c0bd732cbbe845c87d42fb4bde7185ea2c4741dad4928efda698617ca5e1e02f"
+                      }
+                  ]
 }
