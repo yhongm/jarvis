@@ -1,27 +1,27 @@
 ﻿{
-    "product":  "Jarvis",
-    "version":  "0.1.7",
-    "built_at":  "2026-07-17 18:10:18",
-    "artifacts":  [
-                      {
-                          "id":  "installer-windows",
-                          "kind":  "installer",
-                          "platform":  "windows",
-                          "label_zh":  "Windows 瀹夎鍖?(x64)",
-                          "label_en":  "Windows Installer (x64)",
-                          "file":  "Jarvis-Setup-0.1.7-x64.exe",
-                          "size_bytes":  11368196,
-                          "sha256":  "e55bfdf5a42fb9cfa0e6f1bd707c9c79626a34b3029452feb5e8717b51f8f4ad"
-                      },
-                      {
-                          "id":  "installer-macos",
-                          "kind":  "installer",
-                          "platform":  "macos",
-                          "label_zh":  "macOS 瀹夎鍖?(Apple Silicon)",
-                          "label_en":  "macOS Installer (Apple Silicon)",
-                          "file":  "Jarvis-Setup-0.1.7-macos-aarch64.pkg",
-                          "size_bytes":  12046170,
-                          "sha256":  "9122ec92b53e180347faf36053c11c6e1c1917d6e70d663479c806ab2672d822"
-                      }
-                  ]
+  "product": "Jarvis",
+  "version": "0.1.8",
+  "built_at": "2026-08-13 17:09:19",
+  "artifacts": [
+    {
+      "id": "installer-windows",
+      "kind": "installer",
+      "platform": "windows",
+      "label_zh": "Windows 安装包 (x64)",
+      "label_en": "Windows Installer (x64)",
+      "file": "Jarvis-Setup-0.1.8-x64.exe",
+      "size_bytes": 11464228,
+      "sha256": "a428c3b3b6698e24e8cf3780eb57231384a6ecc526f334d0e651ea21f1cf565d"
+    },
+    {
+      "id": "installer-macos",
+      "kind": "installer",
+      "platform": "macos",
+      "label_zh": "macOS 安装包 (Apple Silicon)",
+      "label_en": "macOS Installer (Apple Silicon)",
+      "file": "Jarvis-Setup-0.1.8-macos-aarch64.pkg",
+      "size_bytes": 12153501,
+      "sha256": "a805b2c27239e120a72859ae4d93f884ccd59fe7cbf21e43fe6016cd0f405bea"
+    }
+  ]
 }
